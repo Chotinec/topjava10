@@ -30,4 +30,8 @@ public class UserMeal {
     public int getCalories() {
         return calories;
     }
+
+    public UserMealWithExceed toUserMealWithExceed(int caloriesPerDay) {
+        return new UserMealWithExceed(dateTime, description, calories, caloriesPerDay < calories);
+    }
 }
