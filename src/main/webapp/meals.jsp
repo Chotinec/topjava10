@@ -1,4 +1,4 @@
-
+<%@ page import="ru.javawebinar.topjava.util.TimeUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -35,11 +35,15 @@
         </tr>
         <c:set var="count" value="0" scope="page" />
         <c:forEach var="meal" items="${requestScope.mealList}">
+            <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.model.MealWithExceed" />
             <tr style="${meal.exceed ? 'color: red;' : 'color :green;'}">
                 <!--<c:set var="count" value="${count + 1}" scope="page"/>-->
                 <td>${meal.id}</td>
                 <td>${meal.description}</td>
-                <td><javatime:format value="${meal.dateTime}" style="MS" /></td>
+                <td>
+                    <!--<javatime:format value="${meal.dateTime}" style="MS" />-->
+                    <%=TimeUtil.toString(meal.getDateTime())%>
+                </td>
                 <td>${meal.calories}</td>
                 <td>${meal.exceed}</td>
                 <td><a href="meals?action=edit&mealId=<c:out value="${meal.id}"/>">Update</a></td>
