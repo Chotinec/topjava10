@@ -23,6 +23,8 @@
 
     <h2><a href="index.html">Home</a></h2>
     <h2>Meals list</h2>
+    <p><a href="meals?action=insert">Add User</a></p>
+    <hr>
 
     <table>
         <tr>
@@ -52,6 +54,5 @@
         </c:forEach>
     </table>
 
-    <p><a href="meals?action=insert">Add User</a></p>
 </body>
 </html>

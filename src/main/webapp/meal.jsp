@@ -5,28 +5,45 @@
 <html>
 <head>
     <title>Meal</title>
+    <style>
+        dl {
+            background: none repeat scroll 0 0 #FAFAFA;
+            margin: 8px 0;
+            padding: 0;
+        }
+        dt {
+            display: inline-block;
+            width: 170px;
+        }
+        dd {
+            display: inline-block;
+            margin-left: 8px;
+            vertical-align: top;
+        }
+    </style>
 </head>
 <body>
     <h2><a href="index.html">Home</a></h2>
     <h2>Meals list</h2>
+    <hr>
 
+    <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <form method="post" action="meals" >
-        User ID : <label>
-            <input type="text" name="id" readonly="readonly" name="userid" value="<c:out value="${requestScope.meal.id}" />"/>
-        </label> <br/><br/>
-        Description : <label>
-            <input type="text" name="description" value="<c:out value="${requestScope.meal.description}" />"/>
-        </label><br/><br/>
-        Date : <label>
-            <input type="datetime" name="dateTime" value="<javatime:format value="${requestScope.meal.dateTime}" style="MS" />" />
-        </label><br/><br/>
-        Calories : <label>
-            <input type="text" name="calories" value="<c:out value="${requestScope.meal.calories}" />" />
-        </label><br/><br/>
-        Exceed : <label>
-            <input type="text" name="exceed" value="<c:out value="${requestScope.meal.exceed}" />" />
-        </label><br/><br/>
-        <input type="submit" value="OK">
+        <input type="hidden" name="id" value="${meal.id}">
+        <dl>
+            <dt>Description:</dt>
+            <dd><input type="text" name="description" value="${meal.description}" ></dd>
+        </dl>
+        <dl>
+            <dt>Date:</dt>
+            <dd><input type="datetime-local" name="dateTime" value="${meal.dateTime}" /></dd>
+        </dl>
+        <dl>
+            <dt>Calories:</dt>
+            <dd><input type="number" name="calories" value="${meal.calories}" /></dd>
+        </dl>
+        <button type="submit">Save</button>
+        <button onclick="window.history.back()">Cancel</button>
     </form>
 </body>
 </html>

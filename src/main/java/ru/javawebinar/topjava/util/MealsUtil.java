@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 public class MealsUtil {
 
     public static List<Meal> meals = new LinkedList<>(Arrays.asList(
-            new Meal(1, LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
-            new Meal(2, LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
-            new Meal(3, LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
-            new Meal(4, LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
-            new Meal(5, LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
-            new Meal(6, LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
+            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
     ));
 
     public static final int CALORIES_PER_DAY = 2000;
@@ -44,6 +44,19 @@ public class MealsUtil {
 
 
         return meals.stream()
+                .map(meal -> createWithExceed(meal))
+                .collect(Collectors.toList());
+    }
+
+    public static List<MealWithExceed> getMealsWithExceeded(Collection<Meal> meals1) {
+        Map<LocalDate, Integer> caloriesSumByDate = meals1.stream()
+                .collect(
+                        Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories))
+//                      Collectors.toMap(Meal::getDate, Meal::getCalories, Integer::sum)
+                );
+
+
+        return meals1.stream()
                 .map(meal -> createWithExceed(meal))
                 .collect(Collectors.toList());
     }
