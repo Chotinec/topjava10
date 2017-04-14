@@ -36,6 +36,14 @@ public class User extends NamedEntity {
         this.roles = roles;
     }
 
+    public User(String name, String email, String password, Role role, Role... roles) {
+        this(null, name, email, password, DEFAULT_CALORIES_PER_DAY, true, EnumSet.of(role, roles));
+    }
+
+    public User(String name, String email, String password, int caloriesPerDay, Role role, Role... roles) {
+        this(null, name, email, password, caloriesPerDay, true, EnumSet.of(role, roles));
+    }
+
     public String getEmail() {
         return email;
     }
@@ -78,6 +86,10 @@ public class User extends NamedEntity {
 
     public String getPassword() {
         return password;
+    }
+
+    public boolean isNew() {
+        return id == null;
     }
 
     @Override
