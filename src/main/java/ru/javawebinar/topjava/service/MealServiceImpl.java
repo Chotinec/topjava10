@@ -10,14 +10,17 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.ValidationUtil.checkIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class MealServiceImpl implements MealService {
 
+    private final MealRepository repository;
+
     @Autowired
-    private MealRepository repository;
+    public MealServiceImpl(MealRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public Meal save(Meal meal) {

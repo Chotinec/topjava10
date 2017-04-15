@@ -14,12 +14,19 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import static ru.javawebinar.topjava.util.DateTimeUtil.MAX_DATE;
+import static ru.javawebinar.topjava.util.DateTimeUtil.MIN_DATE;
+
 @Controller
 public class MealRestController {
-    protected final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+
+    private final MealService service;
 
     @Autowired
-    private MealService service;
+    public MealRestController(MealService service) {
+        this.service = service;
+    }
 
     public List<MealWithExceed> getAll() {
         LOG.info("getAll");
@@ -27,23 +34,31 @@ public class MealRestController {
     }
 
     public List<MealWithExceed> getAll(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        LOG.info("getAll filtered");
-        return MealsUtil.getWithExceeded(service.getAll(startDate, startTime, endDate, endTime, AuthorizedUser.id()), AuthorizedUser.getCaloriesPerDay());
+        Integer userId = AuthorizedUser.id();
+        LOG.info("get all filtered meal for user {}", userId);
+        return MealsUtil.getWithExceeded(service.getAll(
+                startDate == null ? MIN_DATE : startDate,
+                startTime == null ? LocalTime.MIN : startTime,
+                endDate == null ? MAX_DATE : endDate,
+                endTime == null ? LocalTime.MAX : endTime,
+                userId), AuthorizedUser.getCaloriesPerDay());
     }
 
     public MealWithExceed get(int id) {
-        LOG.info("get " + id);
-        Meal meal = service.get(id, AuthorizedUser.id());
+        Integer userId = AuthorizedUser.id();
+        LOG.info("get meal with id {} for userId {}", id, userId);
+        Meal meal = service.get(id, userId);
         return MealsUtil.createWithExceed(meal,false);
     }
 
     public void delete(int id) {
-        LOG.info("delete " + id);
-        service.delete(id, AuthorizedUser.id());
+        Integer userId = AuthorizedUser.id();
+        LOG.info("delete {}", id);
+        service.delete(id, userId);
     }
 
     public MealWithExceed save(MealWithExceed mealWithExceed) {
-        LOG.info("save " + mealWithExceed);
+        LOG.info("save {}", mealWithExceed);
         Meal meal = new Meal(
                 mealWithExceed.getId(),
                 mealWithExceed.getDateTime(),
@@ -54,7 +69,7 @@ public class MealRestController {
     }
 
     public void update(MealWithExceed mealWithExceed) {
-        LOG.info("update " + mealWithExceed);
+        LOG.info("update {}", mealWithExceed);
         Meal meal = new Meal(
                 mealWithExceed.getId(),
                 mealWithExceed.getDateTime(),

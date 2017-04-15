@@ -5,39 +5,33 @@
 <html>
 <head>
     <title>Meal list</title>
-    <style>
-        .normal {
-            color: green;
-        }
-
-        .exceeded {
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <section>
     <h2><a href="index.html">Home</a></h2>
     <h2>Meal list</h2>
-    <a href="meals?action=create">Add Meal</a>
-    <hr>
-    <form method="post" action="meals">
-        <table>
-            <tr>
-                <td>Start Date:</td>
-                <td><input type="datetime-local" name="startDate" ></td>
-                <td>Start Time:</td>
-                <td><input type="time" name="startTime"></td>
-            </tr>
-            <tr>
-                <td>End Date:</td>
-                <td><input type="datetime-local" name="endDate"></td>
-                <td>End Time:</td>
-                <td><input type="time" name="endTime"></td>
-            </tr>
-        </table>
+    <a href="meals?action=create">Add Meal</a><br>
+    <form method="post" action="meals?action=filter">
+        <dl>
+            <dt>From Date:</dt>
+            <dd><input type="date" value="${param.startDate}" name="startDate"></dd>
+        </dl>
+        <dl>
+            <dt>To Date:</dt>
+            <dd><input type="date" value="${param.endDate}" size=40 name="endDate"></dd>
+        </dl>
+        <dl>
+            <dt>From Time:</dt>
+            <dd><input type="time" value="${param.startTime}" name="startTime"></dd>
+        </dl>
+        <dl>
+            <dt>To Time:</dt>
+            <dd><input type="time" value="${param.endTime}" name="endTime"></dd>
+        </dl>
         <button type="submit">Filter</button>
-    </form><br>
+    </form>
+    <hr>
 
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
