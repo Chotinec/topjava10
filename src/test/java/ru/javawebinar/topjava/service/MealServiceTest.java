@@ -117,4 +117,11 @@ public class MealServiceTest {
     public void testNotFoundDelete() throws Exception {
         mealService.delete(1, ADMIN_ID);
     }
+
+    @Test(expected = NotFoundException.class)
+    public void testNotFoundUpdate() throws Exception {
+        Meal updatedMeal = new Meal(MEAL_1);
+        updatedMeal.setDescription("testDescription");
+        mealService.update(updatedMeal, ADMIN_ID);
+    }
 }

@@ -33,4 +33,6 @@ CREATE TABLE meals
   calories INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE
-)
+);
+
+CREATE UNIQUE INDEX meals_unique_user_datetime_idx ON meals(user_id, date_time);

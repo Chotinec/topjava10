@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
@@ -56,8 +57,11 @@ public class JdbcMealRepositoryImpl implements MealRepository {
             Number newKey = insertMeal.executeAndReturnKey(map);
             meal.setId(newKey.intValue());
         } else {
-            namedParameterJdbcTemplate.update(
-                    "UPDATE meals SET datetime=:dateTime, description=:description, calories=:calories, user_id=:user_id WHERE id=:id", map);
+            if (namedParameterJdbcTemplate.update(
+                    "UPDATE meals SET datetime=:dateTime, description=:description, calories=:calories, user_id=:user_id" +
+                            " WHERE id=:id AND user_id=:user_id", map) == 0) {
+                return null;
+            }
         }
 
         return meal;
@@ -71,7 +75,7 @@ public class JdbcMealRepositoryImpl implements MealRepository {
     @Override
     public Meal get(int id, int userId) {
         List<Meal> meals = jdbcTemplate.query("SELECT * FROM meals WHERE id=? AND user_id=?", RAW_MAPPER, id, userId);
-        return DataAccessUtils.singleResult(meals);
+        return CollectionUtils.isEmpty(meals) ? null : DataAccessUtils.singleResult(meals);
     }
 
     @Override
