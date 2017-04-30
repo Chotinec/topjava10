@@ -1,9 +1,14 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.Stopwatch;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -11,7 +16,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.rules.TimeRule;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
@@ -29,12 +33,15 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
+    private static final Logger LOG = LoggerFactory.getLogger(MealServiceTest.class);
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    @Rule
-    public TimeRule rule = new TimeRule();
+    //@Rule
+    //public TimeRule rule = new TimeRule();
+
+    private static StringBuilder results = new StringBuilder();
 
     static {
         SLF4JBridgeHandler.install();
@@ -42,6 +49,26 @@ public class MealServiceTest {
 
     @Autowired
     private MealService service;
+
+    @Rule
+    public Stopwatch stopwatch = new Stopwatch() {
+        @Override
+        protected void finished(long nanos, Description description) {
+           // super.finished(nanos, description);
+            String result = String.format("%s - %d", description.getMethodName(), nanos);
+            results.append(results).append("\n");
+            LOG.info(result + "ms\n");
+        }
+    };
+
+    @AfterClass
+    public static void printResult() {
+        LOG.info("\n---------------------------------" +
+                "\nTest                 Duration, ms" +
+                "\n---------------------------------\n" +
+                results +
+                "---------------------------------\n");
+    }
 
     @Test
     public void testDelete() throws Exception {
