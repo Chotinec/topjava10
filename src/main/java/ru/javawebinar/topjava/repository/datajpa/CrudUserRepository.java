@@ -26,6 +26,9 @@ public interface CrudUserRepository extends JpaRepository<User, Integer> {
     User findOne(Integer id);
 
     @Override
+    User getOne(Integer integer);
+
+    @Override
     List<User> findAll(Sort sort);
 
     User getByEmail(String email);
