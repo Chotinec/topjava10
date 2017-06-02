@@ -10,6 +10,7 @@
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
+    <h3><a href="${pageContext.request.contextPath}">Home</a> </h3>
     <h3><spring:message code="meals.title"/></h3>
     <form method="post" action="meals/filter">
         <dl>

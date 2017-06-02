@@ -9,11 +9,6 @@ import ru.javawebinar.topjava.service.UserService;
 @Controller
 public class ProfileRestController extends AbstractUserController {
 
-    @Autowired
-    public ProfileRestController(UserService service) {
-        super(service);
-    }
-
     public User get() {
         return super.get(AuthorizedUser.id());
     }

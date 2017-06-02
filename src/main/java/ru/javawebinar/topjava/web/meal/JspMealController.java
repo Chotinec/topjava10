@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.web;
+package ru.javawebinar.topjava.web.meal;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +20,18 @@ import java.time.temporal.ChronoUnit;
 
 @Controller
 @RequestMapping(value = "/meals")
-public class MealController {
-
-    @Autowired
-    private MealService mealService;
+public class JspMealController extends AbstactMealController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String meals(Model model) {
-        model.addAttribute("meals", MealsUtil.getWithExceeded(mealService.getAll(AuthorizedUser.id()), AuthorizedUser.getCaloriesPerDay()));
+        model.addAttribute("meals", super.getAll());
         return "meals";
     }
 
     @RequestMapping(value = "/delete")
     public String deleteMeal(HttpServletRequest request) {
         int id = Integer.valueOf(request.getParameter("id"));
-        mealService.delete(id, AuthorizedUser.id());
+        super.delete(id);
         return "redirect:/meals";
     }
 
@@ -48,7 +45,7 @@ public class MealController {
     @RequestMapping(value = "/update", method = RequestMethod.GET)
     public String getMeal(HttpServletRequest request, Model model) {
         int id = Integer.valueOf(request.getParameter("id"));
-        Meal meal = mealService.get(id, AuthorizedUser.id());
+        Meal meal = super.get(id);
         model.addAttribute("meal", meal);
         return "meal";
     }
@@ -61,10 +58,10 @@ public class MealController {
                 Integer.valueOf(request.getParameter("calories")));
 
         if (request.getParameter("id").isEmpty()) {
-            mealService.save(meal, AuthorizedUser.id());
+           super.save(meal);
         } else {
             meal.setId(Integer.valueOf(request.getParameter("id")));
-            mealService.update(meal, AuthorizedUser.id());
+            super.update(meal);
         }
         return "redirect:/meals";
     }
@@ -77,13 +74,11 @@ public class MealController {
         LocalTime startTime = DateTimeUtil.parseLocalTime(request.getParameter("startTime"));
         LocalTime endTime = DateTimeUtil.parseLocalTime(request.getParameter("endTime"));
 
-        model.addAttribute("meals", MealsUtil.getFilteredWithExceeded(
-                mealService.getBetweenDates(
+        model.addAttribute("meals", super.getBetweenDates(
                         startDate != null ? startDate : DateTimeUtil.MIN_DATE,
-                        endDate != null ? endDate : DateTimeUtil.MAX_DATE, AuthorizedUser.id()),
-                startTime != null ? startTime : LocalTime.MIN,
-                endTime != null ? endTime : LocalTime.MAX,
-                AuthorizedUser.getCaloriesPerDay()
+                        endDate != null ? endDate : DateTimeUtil.MAX_DATE,
+                        startTime != null ? startTime : LocalTime.MIN,
+                        endTime != null ? endTime : LocalTime.MAX
         ));
 
         return "redirect:/meals";
