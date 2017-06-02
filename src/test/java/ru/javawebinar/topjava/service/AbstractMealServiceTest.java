@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.topjava.model.Meal;
@@ -79,6 +81,7 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    @Ignore
     public void testValidation() throws Exception {
         validateRootCause(() -> service.save(new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "  ", 300), USER_ID), ConstraintViolationException.class);
         validateRootCause(() -> service.save(new Meal(null, null, "Description", 300), USER_ID), ConstraintViolationException.class);
