@@ -20,8 +20,12 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 public abstract class AbstractMealController {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
+    private final MealService service;
+
     @Autowired
-    private MealService service;
+    public AbstractMealController(MealService service) {
+        this.service = service;
+    }
 
     public Meal get(int id) {
         int userId = AuthorizedUser.id();
@@ -35,10 +39,10 @@ public abstract class AbstractMealController {
         service.delete(id, userId);
     }
 
-    public List<MealWithExceed> getAll() {
+    public List<Meal> getAll() {
         int userId = AuthorizedUser.id();
         LOG.info("getAll for User {}", userId);
-        return MealsUtil.getWithExceeded(service.getAll(userId), AuthorizedUser.getCaloriesPerDay());
+        return service.getAll(userId);
     }
 
     public Meal create(Meal meal) {
@@ -55,17 +59,12 @@ public abstract class AbstractMealController {
         service.update(meal, userId);
     }
 
-    public List<MealWithExceed> getBetween(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+    public List<Meal> getBetween(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         int userId = AuthorizedUser.id();
         LOG.info("getBetween dates({} - {}) time({} - {}) for User {}", startDate, endDate, startTime, endTime, userId);
 
-        return MealsUtil.getFilteredWithExceeded(
-                service.getBetweenDates(
+        return service.getBetweenDates(
                         startDate != null ? startDate : DateTimeUtil.MIN_DATE,
-                        endDate != null ? endDate : DateTimeUtil.MAX_DATE, userId),
-                startTime != null ? startTime : LocalTime.MIN,
-                endTime != null ? endTime : LocalTime.MAX,
-                AuthorizedUser.getCaloriesPerDay()
-        );
+                        endDate != null ? endDate : DateTimeUtil.MAX_DATE, userId);
     }
 }
