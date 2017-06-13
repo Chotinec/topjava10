@@ -7,13 +7,21 @@
 
     <bean class="ru.javawebinar.topjava.web.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
 
-    <mvc:annotation-driven>
+    <mvc:annotation-driven conversion-service="theConversionService">
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                 <property name="objectMapper" ref="objectMapper"/>
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
+
+    <bean class="org.springframework.context.support.ConversionServiceFactoryBean" id="theConversionService">
+        <property name="converters">
+            <set>
+                <bean class="ru.javawebinar.topjava.web.converter.StringToLocaleDateTimeConverter"></bean>
+            </set>
+        </property>
+    </bean>
 
     <context:component-scan base-package="ru.javawebinar.**.web"/>
 
