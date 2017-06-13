@@ -11,6 +11,14 @@
     <!-- enables scanning for @Cacheable annotation -->
     <cache:annotation-driven/>
 
+    <bean class="org.springframework.context.support.ConversionServiceFactoryBean" id="theConversionService">
+        <property name="converters">
+            <set>
+                <bean class="ru.javawebinar.topjava.web.converter.StringToLocaleDateTimeConverter"></bean>
+            </set>
+        </property>
+    </bean>
+
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"
         p:cacheManager-ref="ehcache"/>
 
