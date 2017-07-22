@@ -40,3 +40,11 @@ $(function () {
     });
     makeEditable();
 });
+
+function enableUser(id) {
+
+    if ($('#enabled_'+id).is(":checked"))
+        $('#' + id).removeClass('disabled').addClass('enabled');
+    else
+        $('#' + id).removeClass('enabled').addClass('disabled');
+}
