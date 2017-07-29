@@ -32,6 +32,7 @@ $(function () {
         ]
     });
     makeEditable();
+    init();
 });
 
 function clearFilter() {
@@ -56,4 +57,9 @@ function updateTable() {
             datatableApi.draw();
         }
     });
+    init();
+}
+
+function init() {
+
 }

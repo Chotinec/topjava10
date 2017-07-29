@@ -39,12 +39,32 @@ $(function () {
         ]
     });
     makeEditable();
+    init();
 });
 
 function enableUser(id) {
-
-    if ($('#enabled_'+id).is(":checked"))
+    var enabled = $('#enabled_'+id).is(":checked");
+    if (enabled)
         $('#' + id).removeClass('disabled').addClass('enabled');
     else
         $('#' + id).removeClass('enabled').addClass('disabled');
+
+    $.ajax({
+        type: "POST",
+        url: ajaxUrl + id,
+        data: "enabled="+enabled,
+        success: function () {
+            successNoty(enabled? 'enabled' : 'disabled');
+        }
+    });
+}
+
+function init() {
+    $(":checkbox").each(function () {
+       if ($(this).is(":checked")) {
+           $(this).parent().parent().removeClass('disabled').addClass('enabled');
+       } else {
+           $(this).parent().parent().removeClass('enabled').addClass('disabled');
+       }
+    });
 }

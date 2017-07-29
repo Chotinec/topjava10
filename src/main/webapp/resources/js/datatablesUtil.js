@@ -41,6 +41,7 @@ function updateTable() {
         });
         datatableApi.draw();
     });
+    init();
 }
 
 function save() {
