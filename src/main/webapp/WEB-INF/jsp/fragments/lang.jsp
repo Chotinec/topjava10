@@ -7,7 +7,13 @@
 <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">${pageContext.response.locale}<b class="caret"></b></a>
     <ul class="dropdown-menu">
-        <li><a href="?language=en">English</a> </li>
-        <li><a href="?language=ru">Russian</a> </li>
+        <li><a onclick="show('en')">English</a> </li>
+        <li><a onclick="show('ru')">Russian</a> </li>
     </ul>
 </li>
+
+<script type="text/javascript">
+    function show(lang) {
+        window.location.href = window.location.href.split('?')[0] + '?language=' + lang;
+    }
+</script>
