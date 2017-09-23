@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.topjava.MealTestData;
@@ -20,9 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
-import static ru.javawebinar.topjava.UserTestData.ADMIN;
-import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
-import static ru.javawebinar.topjava.UserTestData.USER;
+import static ru.javawebinar.topjava.UserTestData.*;
 import static ru.javawebinar.topjava.model.BaseEntity.START_SEQ;
 
 public class MealRestControllerTest extends AbstractControllerTest {
@@ -39,7 +38,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MATCHER.contentMatcher(MealTestData.ADMIN_MEAL1));
+                .andExpect(MealTestData.MATCHER.contentMatcher(MealTestData.ADMIN_MEAL1));
     }
 
     @Test
@@ -68,7 +67,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(delete(REST_URL + MEAL1_ID)
                 .with(userHttpBasic(USER)))
                 .andExpect(status().isOk());
-        MATCHER.assertCollectionEquals(Arrays.asList(MEAL6, MEAL5, MEAL4, MEAL3, MEAL2), service.getAll(START_SEQ));
+        MealTestData.MATCHER.assertCollectionEquals(Arrays.asList(MEAL6, MEAL5, MEAL4, MEAL3, MEAL2), service.getAll(START_SEQ));
     }
 
     @Test
@@ -92,11 +91,11 @@ public class MealRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(created))
                 .with(userHttpBasic(ADMIN)));
 
-        Meal returned = MATCHER.fromJsonAction(action);
+        Meal returned = MealTestData.MATCHER.fromJsonAction(action);
         created.setId(returned.getId());
 
-        MATCHER.assertEquals(created, returned);
-        MATCHER.assertCollectionEquals(Arrays.asList(ADMIN_MEAL2, created, ADMIN_MEAL1), service.getAll(ADMIN_ID));
+        MealTestData.MATCHER.assertEquals(created, returned);
+        MealTestData.MATCHER.assertCollectionEquals(Arrays.asList(ADMIN_MEAL2, created, ADMIN_MEAL1), service.getAll(ADMIN_ID));
     }
 
     @Test
@@ -130,5 +129,29 @@ public class MealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(MATCHER_WITH_EXCEED.contentListMatcher(
                         MealsUtil.getWithExceeded(Arrays.asList(MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1), USER.getCaloriesPerDay())));
+    }
+
+    @Test
+    public void testNotValidData() throws Exception {
+        mockMvc.perform(get(REST_URL + 0)
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(422));
+    }
+
+    @Test
+    public void testUpdateNotValidDate() throws Exception {
+        Meal created = getCreated();
+        service.save(created, USER_ID);
+
+        Meal updated = getUpdated();
+        updated.setDateTime(created.getDateTime());
+
+        mockMvc.perform(put(REST_URL + MEAL1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updated))
+                .with(userHttpBasic(USER)))
+                .andExpect(status().is(409));
     }
 }

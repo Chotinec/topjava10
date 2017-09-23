@@ -23,6 +23,7 @@
                 </button>
             </form:form>
         </div>
+        <jsp:include page="fragments/lang.jsp"/>
     </div>
 </div>
 

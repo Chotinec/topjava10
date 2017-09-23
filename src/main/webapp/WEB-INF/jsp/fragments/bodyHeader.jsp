@@ -20,6 +20,7 @@
                     </button>
                 </sec:authorize>
             </form:form>
+            <jsp:include page="lang.jsp"/>
         </div>
     </div>
 </div>
