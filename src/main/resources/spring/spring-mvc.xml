@@ -1,9 +1,4 @@
-        <property name="fallbackToSystemLocale" value="false"/>
-    </bean>
 
-    <mvc:interceptors>
-        <bean class="ru.javawebinar.topjava.web.interceptor.ModelInterceptor"/>
-    </mvc:interceptors>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:p="http://www.springframework.org/schema/p"
@@ -18,6 +13,10 @@
 
     <!-- serve static resources (*.html, ...) from src/main/webapp/ -->
     <mvc:default-servlet-handler/>
+
+<mvc:interceptors>
+<bean class="ru.javawebinar.topjava.web.interceptor.ModelInterceptor"/>
+</mvc:interceptors>
 
     <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled"/>
 
