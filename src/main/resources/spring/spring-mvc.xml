@@ -15,10 +15,6 @@
     <!--https://stackoverflow.com/a/44393203/548473-->
     <!--<mvc:default-servlet-handler/>-->
 
-<mvc:interceptors>
-<bean class="ru.javawebinar.topjava.web.interceptor.ModelInterceptor"/>
-</mvc:interceptors>
-
     <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled"/>
 
     <mvc:annotation-driven conversion-service="conversionService">
@@ -65,7 +61,7 @@
     </bean>
 
     <mvc:interceptors>
-        <bean class="ru.javawebinar.topjava.web.interceptor.ModelInterceptor"/>
+        <!--<bean class="ru.javawebinar.topjava.web.interceptor.ModelInterceptor"/>-->
 
         <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
             <property name="paramName" value="lang"/>
